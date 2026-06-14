@@ -3,6 +3,8 @@ let L = [];
 const form_settings = document.getElementById('sortSettingsForm');
 const input_lengh_list = document.getElementById('listLenghInput');
 const btn_regenrate = document.getElementById('regenerateButton');
+const table_output = document.getElementById('outputTable');
+
 let Settings = {
     "list_len": 6,
     "big_start": 0,
@@ -22,6 +24,7 @@ function generate_list() {
     };
 
     document.getElementById('currentListOutput').innerHTML = generate_output_list();
+    table_output.innerHTML = '';
 }
 
 function generate_random_int(min = 1, max = 100, excludes = [67]) {
@@ -87,40 +90,63 @@ btn_regenrate.addEventListener('click', generate_list);
 
 
 
-async function sort() {
-    let index = 0;
+function sort() {
     let sorted = false;
-    while (!sorted) {
-        let first = L[index];
-        let second = L[index + 1];
-        let result = (first > second)
 
-        while (index < L.length) {
-            // ToDo: Think about the if-statements, so only two tmp-vars(Bools) are used ...
-            if (Settings['big_start'] && result) {L[index] = second;
+    initialize_output_table();
+    append_sorting_step_to_table();
+
+    while (!sorted) {
+        sorted = true;
+        for (let index = 0; index < L.length - 1; index++) {
+            let first = L[index];
+            let second = L[index + 1];
+
+            if (first > second) {
+                L[index] = second;
                 L[index + 1] = first;
                 sorted = false;
-            } else if (Settings['big_start'] && !result) {
-                // ToDo: may remove ... (or sth)
-            } else {
-                throw new Error("Stuff BROKE while sorting");
             }
-            test_stuff(index);
-            index += 1;
+            append_sorting_step_to_table(index);
         }
-        index = 0;
     }
 }
 
-async function test_stuff(index) {
-    document.getElementById('currentListOutput').innerHTML = generate_output_list(index);
-    sleep(100)
+
+document.getElementById('sortTrigger').addEventListener('click', sort); // ToDo: update this somewhen 
+
+function initialize_output_table() {
+    table_output.innerHTML = ''; // already in genrate_list() ... 
+    const thead = document.createElement('thead');
+    const tr = document.createElement('tr');
+    
+    for (let i = 0; i < L.length; i++) {
+        const th = document.createElement('th');
+        th.textContent = `${i}`;
+        tr.appendChild(th);
+    }
+
+    thead.appendChild(tr);
+    table_output.appendChild(thead);
+    
+    const tbody = document.createElement('tbody');
+    table_output.appendChild(tbody);
 }
 
-
-// from https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+function append_sorting_step_to_table(activeIndex = null) {
+    const tbody = table_output.querySelector('tbody');
+    const tr = document.createElement('tr');
+    
+    L.forEach((value, i) => {
+        const td = document.createElement('td');
+        td.textContent = value;
+        
+        if (i === activeIndex || i === activeIndex + 1) {
+            td.classList.add('current');
+        }
+        
+        tr.appendChild(td);
+    });
+    
+    tbody.appendChild(tr);
 }
-
-document.getElementById('sortTrigger').addEventListener('click', sort)
