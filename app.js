@@ -14,13 +14,13 @@ function update_settings() {
 }
 
 function generate_list() {
-    let L = [];
+    L = [];
     for (let i = 0; i < Settings['list_len']; i++) {
        let tmp_max = genrate_list_max_dynamic(); 
        L.push(generate_random_int(1, tmp_max, L));
     };
 
-    document.getElementById('currentListOutput').innerHTML = L;
+    document.getElementById('currentListOutput').innerHTML = generate_output_list();
 }
 
 function generate_random_int(min = 1, max = 100, excludes = [67]) {
@@ -54,6 +54,18 @@ function generate_random_int(min = 1, max = 100, excludes = [67]) {
 
 function genrate_list_max_dynamic() { // ToDo ("STATIC" for now(for EVER))
     return Settings['list_len']*2
+}
+
+function generate_output_list(index = null) {
+    let TMP_output = '';
+    L.forEach((i, L_index) => {
+        let TMP_str= `[${i}]`;
+        if (L_index == index || L_index == index + 1 ) {
+            TMP_str= `<span class="current">[${i}]</span>`;
+        }
+        TMP_output += TMP_str;
+    });
+    return TMP_output;
 }
 
 form_settings.addEventListener('submit', function(event) { event.preventDefault(); update_settings()});
