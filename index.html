@@ -8,12 +8,19 @@
 <body>
     <h1>Hello World!</h1>
 
-    <form id="sortSettingsForm">
-        <div class="input-stuff">
-            <label for="list_lenght">Listenlänge: </label>
-            <input type="number" name="list_lenght" id="listLenghInput" min="3" value="6">
-        </div>
-    </form>
+    <div class="actions">
+        <form id="sortSettingsForm">
+            <div class="input-stuff">
+                <label for="list_lenght">Listenlänge: </label>
+                <input type="number" name="list_lenght" id="listLenghInput" min="3" value="6">
+            </div>
+        </form>
+        <button id="regenerateButton">Re-generate</button>
+    </div>
+
+    <div id="outputContainer">
+        <div id="currentListOutput"></div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
