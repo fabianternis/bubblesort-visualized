@@ -5,6 +5,7 @@ const input_lengh_list = document.getElementById('listLenghInput');
 const btn_regenrate = document.getElementById('regenerateButton');
 let Settings = {
     "list_len": 6,
+    "big_start": 0,
 }
 
 function update_settings() {
@@ -60,7 +61,7 @@ function generate_output_list(index = null) {
     let TMP_output = '';
     L.forEach((i, L_index) => {
         let TMP_str= `[${i}]`;
-        if (L_index == index || L_index == index + 1 ) {
+        if ((L_index == index || L_index == index + 1) && index != null) {
             TMP_str= `<span class="current">[${i}]</span>`;
         }
         TMP_output += TMP_str;
@@ -68,5 +69,58 @@ function generate_output_list(index = null) {
     return TMP_output;
 }
 
+function generate_output_list_as_table(index = null) {
+    let TMP_output = '<tr>';
+    L.forEach((i, L_index) => {
+        let TMP_str= `<td">[${i}]</td>`;
+        if (L_index == index || L_index == index + 1 ) {
+            TMP_str= `<td class="current">[${i}]</td>`;
+        }
+        TMP_output += TMP_str;
+    });
+    TMP_output += '</tr>';
+    return TMP_output;
+}
+
 form_settings.addEventListener('submit', function(event) { event.preventDefault(); update_settings()});
 btn_regenrate.addEventListener('click', generate_list);
+
+
+
+async function sort() {
+    let index = 0;
+    let sorted = false;
+    while (!sorted) {
+        let first = L[index];
+        let second = L[index + 1];
+        let result = (first > second)
+
+        while (index < L.length) {
+            // ToDo: Think about the if-statements, so only two tmp-vars(Bools) are used ...
+            if (Settings['big_start'] && result) {L[index] = second;
+                L[index + 1] = first;
+                sorted = false;
+            } else if (Settings['big_start'] && !result) {
+                // ToDo: may remove ... (or sth)
+            } else {
+                throw new Error("Stuff BROKE while sorting");
+            }
+            test_stuff(index);
+            index += 1;
+        }
+        index = 0;
+    }
+}
+
+async function test_stuff(index) {
+    document.getElementById('currentListOutput').innerHTML = generate_output_list(index);
+    sleep(100)
+}
+
+
+// from https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+document.getElementById('sortTrigger').addEventListener('click', sort)
