@@ -3,8 +3,11 @@ let L = [];
 const form_settings = document.getElementById('sortSettingsForm');
 const input_lengh_list = document.getElementById('listLenghInput');
 const btn_regenrate = document.getElementById('regenerateButton');
+const table_output = document.getElementById('outputTable');
+
 let Settings = {
     "list_len": 6,
+    "big_start": 0,
 }
 
 function update_settings() {
@@ -21,6 +24,7 @@ function generate_list() {
     };
 
     document.getElementById('currentListOutput').innerHTML = generate_output_list();
+    table_output.innerHTML = '';
 }
 
 function generate_random_int(min = 1, max = 100, excludes = [67]) {
@@ -60,7 +64,7 @@ function generate_output_list(index = null) {
     let TMP_output = '';
     L.forEach((i, L_index) => {
         let TMP_str= `[${i}]`;
-        if (L_index == index || L_index == index + 1 ) {
+        if ((L_index == index || L_index == index + 1) && index != null) {
             TMP_str= `<span class="current">[${i}]</span>`;
         }
         TMP_output += TMP_str;
@@ -68,5 +72,81 @@ function generate_output_list(index = null) {
     return TMP_output;
 }
 
+function generate_output_list_as_table(index = null) {
+    let TMP_output = '<tr>';
+    L.forEach((i, L_index) => {
+        let TMP_str= `<td">[${i}]</td>`;
+        if (L_index == index || L_index == index + 1 ) {
+            TMP_str= `<td class="current">[${i}]</td>`;
+        }
+        TMP_output += TMP_str;
+    });
+    TMP_output += '</tr>';
+    return TMP_output;
+}
+
 form_settings.addEventListener('submit', function(event) { event.preventDefault(); update_settings()});
 btn_regenrate.addEventListener('click', generate_list);
+
+
+
+function sort() {
+    let sorted = false;
+
+    initialize_output_table();
+    append_sorting_step_to_table();
+
+    while (!sorted) {
+        sorted = true;
+        for (let index = 0; index < L.length - 1; index++) {
+            let first = L[index];
+            let second = L[index + 1];
+
+            if (first > second) {
+                L[index] = second;
+                L[index + 1] = first;
+                sorted = false;
+            }
+            append_sorting_step_to_table(index);
+        }
+    }
+}
+
+
+document.getElementById('sortTrigger').addEventListener('click', sort); // ToDo: update this somewhen 
+
+function initialize_output_table() {
+    table_output.innerHTML = ''; // already in genrate_list() ... 
+    const thead = document.createElement('thead');
+    const tr = document.createElement('tr');
+    
+    for (let i = 0; i < L.length; i++) {
+        const th = document.createElement('th');
+        th.textContent = `${i}`;
+        tr.appendChild(th);
+    }
+
+    thead.appendChild(tr);
+    table_output.appendChild(thead);
+    
+    const tbody = document.createElement('tbody');
+    table_output.appendChild(tbody);
+}
+
+function append_sorting_step_to_table(activeIndex = null) {
+    const tbody = table_output.querySelector('tbody');
+    const tr = document.createElement('tr');
+    
+    L.forEach((value, i) => {
+        const td = document.createElement('td');
+        td.textContent = value;
+        
+        if (i === activeIndex || i === activeIndex + 1) {
+            td.classList.add('current');
+        }
+        
+        tr.appendChild(td);
+    });
+    
+    tbody.appendChild(tr);
+}
