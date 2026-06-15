@@ -7,7 +7,7 @@ const table_output = document.getElementById('outputTable');
 
 let Settings = {
     "list_len": 6,
-    "big_start": 0,
+    "big_start": 0, // only false (0) is currently functional – no settings exist in ui, so this is fine
 }
 
 function update_settings() {
@@ -103,6 +103,7 @@ function sort() {
 
     while (!sorted) {
         sorted = true;
+        // while (index < TMP_list.length) { /* now handled by for-loop which is a better practice*/ // the empty while-loop was executed continiously becuase it was empty};
         for (let index = 0; index < TMP_list.length - 1; index++) {
             let first = TMP_list[index];
             let second = TMP_list[index + 1];

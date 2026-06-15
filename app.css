@@ -59,7 +59,10 @@ table {
             &.changed {
                 background-color: rgba(255, 0, 0, 0.3);
                 font-weight: 800;
-                border: 2px solid #00bfff;
+                /*border-inline: 2px solid #ff0000;
+                border-block: none;*/
+                border-inline: none;
+                border-block: 2px solid #ff0000;
             }
         }
     }
