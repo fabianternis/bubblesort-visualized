@@ -97,6 +97,7 @@ btn_regenrate.addEventListener('click', generate_list);
 function sort() {
     let TMP_list = [...L];
     let sorted = false;
+    let durchlaufe = 0;
 
     initialize_output_table(TMP_list);
     append_sorting_step_to_table(null, false, TMP_list);
@@ -104,7 +105,7 @@ function sort() {
     while (!sorted) {
         sorted = true;
         // while (index < TMP_list.length) { /* now handled by for-loop which is a better practice*/ // the empty while-loop was executed continiously becuase it was empty};
-        for (let index = 0; index < TMP_list.length - 1; index++) {
+        for (let index = 0; index < TMP_list.length - 1 - durchlaufe; index++) {
             let first = TMP_list[index];
             let second = TMP_list[index + 1];
 
@@ -117,6 +118,7 @@ function sort() {
                 append_sorting_step_to_table(index, false, TMP_list);
             }
         }
+        durchlaufe +=1;
     }
     L = TMP_list;
 }
