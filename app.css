@@ -22,6 +22,7 @@ table {
     border-collapse: collapse;
     background: #fff;
     border-radius: 8px;
+    border: 4px solid lightblue;
     overflow: hidden;
 
     thead {
@@ -65,5 +66,44 @@ table {
                 border-block: 2px solid #ff0000;
             }
         }
+    }
+}
+
+button {
+    /*width: 125px;
+    height: 48px;*/
+    background-color: #000;
+    color: whitesmoke;
+    border-radius: 12px;
+    padding-inline: 24px;
+    padding-block: 12px;
+
+    &:hover {
+        background-color: rgba(37, 37, 37, 0.813);
+        &:active {
+            background-color: rgba(68, 68, 68, 0.761);
+        }
+    }
+    &:active {
+        background-color: rgba(58, 58, 58, 0.8);
+    }
+
+}
+
+form {
+    div.input-stuff {
+        margin-bottom: .3em;
+        width: 5rem;
+        display: flex;
+        flex-direction: row;
+        gap: .5em;
+        label {
+            width: 100%;
+        }
+        align-items: center;
+    }
+    input {
+        padding-inline: 18px;
+        padding-block: 9px;
     }
 }
