@@ -60,12 +60,16 @@ function genrate_list_max_dynamic() { // ToDo ("STATIC" for now(for EVER))
     return Settings['list_len']*2
 }
 
-function generate_output_list(index = null) {
+function generate_output_list(index = null, is_dirty = false) {
     let TMP_output = '';
     L.forEach((i, L_index) => {
         let TMP_str= `[${i}]`;
         if ((L_index == index || L_index == index + 1) && index != null) {
-            TMP_str= `<span class="current">[${i}]</span>`;
+            if (is_dirty) {
+                TMP_str= `<span class="current changed">[${i}]</span>`;
+            } else {
+                TMP_str= `<span class="current">[${i}]</span>`;
+            }
         }
         TMP_output += TMP_str;
     });
@@ -91,36 +95,40 @@ btn_regenrate.addEventListener('click', generate_list);
 
 
 function sort() {
+    let TMP_list = [...L];
     let sorted = false;
 
-    initialize_output_table();
-    append_sorting_step_to_table();
+    initialize_output_table(TMP_list);
+    append_sorting_step_to_table(null, false, TMP_list);
 
     while (!sorted) {
         sorted = true;
-        for (let index = 0; index < L.length - 1; index++) {
-            let first = L[index];
-            let second = L[index + 1];
+        for (let index = 0; index < TMP_list.length - 1; index++) {
+            let first = TMP_list[index];
+            let second = TMP_list[index + 1];
 
             if (first > second) {
-                L[index] = second;
-                L[index + 1] = first;
+                TMP_list[index] = second;
+                TMP_list[index + 1] = first;
                 sorted = false;
+                append_sorting_step_to_table(index, true, TMP_list);
+            } else {
+                append_sorting_step_to_table(index, false, TMP_list);
             }
-            append_sorting_step_to_table(index);
         }
     }
+    L = TMP_list;
 }
 
 
 document.getElementById('sortTrigger').addEventListener('click', sort); // ToDo: update this somewhen 
 
-function initialize_output_table() {
+function initialize_output_table(list = L) {
     table_output.innerHTML = ''; // already in genrate_list() ... 
     const thead = document.createElement('thead');
     const tr = document.createElement('tr');
     
-    for (let i = 0; i < L.length; i++) {
+    for (let i = 0; i < list.length; i++) {
         const th = document.createElement('th');
         th.textContent = `${i}`;
         tr.appendChild(th);
@@ -133,16 +141,19 @@ function initialize_output_table() {
     table_output.appendChild(tbody);
 }
 
-function append_sorting_step_to_table(activeIndex = null) {
+function append_sorting_step_to_table(activeIndex = null, isChanged = false, list = L) {
     const tbody = table_output.querySelector('tbody');
     const tr = document.createElement('tr');
     
-    L.forEach((value, i) => {
+    list.forEach((value, i) => {
         const td = document.createElement('td');
         td.textContent = value;
         
         if (i === activeIndex || i === activeIndex + 1) {
             td.classList.add('current');
+            if (isChanged) {
+                td.classList.add('changed');
+            }
         }
         
         tr.appendChild(td);
